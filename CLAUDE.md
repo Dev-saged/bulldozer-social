@@ -78,3 +78,10 @@ const useCommunity = () => {
 - Never silently change the meaning or format of a value persisted in an existing DB column; that affects every reader and all historical rows, so ask first. 
 - Never return a raw Prisma row from a model that holds credentials (`Integration`, `User` and similar) in a controller response. Repository writes on those models must use a `select` with only the fields the caller needs (like `setTimes` with `select: { id: true }`), or the controller returns nothing. This applies even where nearby code looks different.
 - Be extra careful with code invoked by webhooks of external systems (Stripe, RevenueCat and other payment providers), including everything they call down the stack (e.g. `SubscriptionService.createOrUpdateSubscription`, `modifySubscription`, `deleteSubscription`). That code must not throw exceptions: never add a `throw`, and wrap any call that can fail (DB, provider API) so a failure is caught and logged instead of propagating. A webhook that throws leaves billing state half-applied for a paying customer.
+
+## Token rules (strict)
+- Session start: read ONLY `.claude/session-handoff.md` and `docs/repo-map.md`. Never scan the repo.
+- Locate code with `Grep "<symbol>" docs/code-index.md` (auto-generated, never Read it whole), then Read the file by line range.
+- Never Read a file over 300 lines whole. Never regenerate unchanged content. Targeted edits only.
+- Do not use conversation_search or re-read old chats for context: repo-map + handoff are the memory.
+
